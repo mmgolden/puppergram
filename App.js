@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  Platform,
 } from 'react-native';
 import * as Font from 'expo-font';
 
@@ -19,9 +20,9 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#f6f6f6',
-    height: 90,
+    height: Platform.OS === 'ios' ? 90 : 78,
     alignItems: 'center',
-    paddingTop: 45,
+    paddingTop: Platform.OS === 'ios' ? 45 : 30,
     borderBottomColor: '#d0d0d0',
     borderBottomWidth: 1,
   },
@@ -49,7 +50,19 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: 400,
     width: 415,
-    marginBottom: 5,
+  },
+  caption: {
+    padding: 10,
+  },
+  captionUsername: {
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+  navigation: {
+    backgroundColor: '#f6f6f6',
+    height: 45,
+    borderColor: '#d0d0d0',
+    borderWidth: 1,
   },
 });
 
@@ -59,6 +72,7 @@ export default class App extends Component {
     loading: true,
     images: [],
     users: [],
+    quotes: [],
   }
 
   // Runs immediately after the component mounts
@@ -76,6 +90,9 @@ export default class App extends Component {
 
     // Random user API URL
     const randomURL = `https://randomuser.me/api/?format=json&nat=us&inc=login&results=${numberOfResults}`;
+
+    // Random quote API URL
+    const quoteURL = `https://api.quotable.io/quotes?limit=${numberOfResults}`;
 
     // Get the images from the API
     fetch(dogURL)
@@ -101,14 +118,25 @@ export default class App extends Component {
         });
       })
       .catch(error => console.error(error));
+
+    // Get random quotes from API
+    fetch(quoteURL)
+      .then(res => res.json())
+      .then(({ results }) => {
+        this.setState({
+          loading: false,
+          quotes: results,
+        });
+      })
+      .catch(error => console.error(error));
   }
 
   getData = () => {
-    const { images, users } = this.state;
+    const { images, users, quotes } = this.state;
     const data = [];
 
     images.forEach((image, index) => {
-      data.push(Object.assign({}, image, users[index]));
+      data.push(Object.assign({}, image, users[index], quotes[index]));
     });
 
     return data;
@@ -125,6 +153,9 @@ export default class App extends Component {
       avatar,
       avatarText,
       postImage,
+      caption,
+      captionUsername,
+      navigation,
     } = styles;
 
     const data = this.getData();
@@ -150,7 +181,7 @@ export default class App extends Component {
         <FlatList
           data={data}
           renderItem={({ item }) => {
-            const { image, login: { username } } = item;
+            const { image, content, login: { username } } = item;
             return (
               <>
                 <View style={avatarContainer}>
@@ -166,11 +197,18 @@ export default class App extends Component {
                   resizeMode="cover"
                   source={{ uri: image }}
                 />
+                <Text style={caption}>
+                  <Text style={captionUsername}>
+                    {username}
+                  </Text>
+                  {` ${content}`}
+                </Text>
               </>
             );
           }}
           keyExtractor={item => item.login.uuid}
         />
+        <View style={navigation} />
       </View>
     );
   }
