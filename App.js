@@ -9,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import * as Font from 'expo-font';
+import Post from './components/Post';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,39 +31,21 @@ const styles = StyleSheet.create({
     fontFamily: 'lobster-bold',
     fontSize: 28,
   },
-  avatarContainer: {
-    padding: 8,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  avatar: {
-    width: 36,
-    height: 36,
-    borderRadius: 36 / 2,
-  },
-  avatarText: {
-    fontWeight: 'bold',
-    marginLeft: 8,
-    color: '#222',
-  },
-  postImage: {
-    alignSelf: 'center',
-    height: 400,
-    width: 415,
-  },
-  caption: {
-    padding: 10,
-  },
-  captionUsername: {
-    fontWeight: 'bold',
-    marginRight: 10,
+  icon: {
+    width: 30,
+    height: 30,
   },
   navigation: {
     backgroundColor: '#f6f6f6',
-    height: 45,
+    height: Platform.OS === 'ios' ? 70 : 50,
     borderColor: '#d0d0d0',
     borderWidth: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: Platform.OS === 'ios' ? 30 : 10,
   },
 });
 
@@ -79,11 +62,11 @@ export default class App extends Component {
   componentDidMount() {
     // Load fonts
     Font.loadAsync({
-      'lobster-bold': require('./assets/fonts/LobsterTwo-Regular.ttf'), //eslint-disable-line
+      'lobster-bold': require('./assets/fonts/LobsterTwo-Regular.ttf'),
     });
 
     // Number of results we want back from the API
-    const numberOfResults = '3';
+    const numberOfResults = '5';
 
     // Dog API URL
     const dogURL = `https://dog.ceo/api/breeds/image/random/${numberOfResults}`;
@@ -131,6 +114,7 @@ export default class App extends Component {
       .catch(error => console.error(error));
   }
 
+  // Combine all of the data
   getData = () => {
     const { images, users, quotes } = this.state;
     const data = [];
@@ -142,6 +126,12 @@ export default class App extends Component {
     return data;
   }
 
+  // Component to render for FlatList
+  renderItem = ({ item }) => (<Post item={item} />);
+
+  // Key extractor for FlatList
+  keyExtractor = item => item._id;
+
   // Renders the components to the screen
   render() {
     const { loading } = this.state;
@@ -149,12 +139,7 @@ export default class App extends Component {
       container,
       header,
       headerText,
-      avatarContainer,
-      avatar,
-      avatarText,
-      postImage,
-      caption,
-      captionUsername,
+      icon,
       navigation,
     } = styles;
 
@@ -172,7 +157,7 @@ export default class App extends Component {
       );
     }
 
-    // Render images
+    // Render posts
     return (
       <View style={container}>
         <View style={header}>
@@ -180,35 +165,12 @@ export default class App extends Component {
         </View>
         <FlatList
           data={data}
-          renderItem={({ item }) => {
-            const { image, content, login: { username } } = item;
-            return (
-              <>
-                <View style={avatarContainer}>
-                  <Image
-                    style={avatar}
-                    resizeMode="cover"
-                    source={{ uri: image }}
-                  />
-                  <Text style={avatarText}>{username}</Text>
-                </View>
-                <Image
-                  style={postImage}
-                  resizeMode="cover"
-                  source={{ uri: image }}
-                />
-                <Text style={caption}>
-                  <Text style={captionUsername}>
-                    {username}
-                  </Text>
-                  {` ${content}`}
-                </Text>
-              </>
-            );
-          }}
-          keyExtractor={item => item.login.uuid}
+          renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
         />
-        <View style={navigation} />
+        <View style={navigation}>
+          <Image style={icon} source={require('./assets/house.png')} />
+        </View>
       </View>
     );
   }
