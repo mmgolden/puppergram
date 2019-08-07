@@ -57,7 +57,7 @@ class Post extends Component {
       likes: likes + 1,
     });
   }
-  
+
   render() {
     const {
       avatarContainer,
@@ -96,7 +96,7 @@ class Post extends Component {
           <Image style={icon} source={require('../assets/pawprint.png')} />
         </TouchableOpacity>
         {/* Likes */}
-        <Text style={likesText}>{likes} likes</Text>
+        <Text style={likesText}>{`${likes} likes`}</Text>
         {/* Caption */}
         <Text style={caption}>
           <Text style={captionUsername}>
@@ -107,6 +107,6 @@ class Post extends Component {
       </>
     );
   }
-};
+}
 
 export default Post;
