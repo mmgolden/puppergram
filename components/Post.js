@@ -1,54 +1,15 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-
-const styles = StyleSheet.create({
-  avatarContainer: {
-    padding: 8,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  avatar: {
-    width: 36,
-    height: 36,
-    borderRadius: 36 / 2,
-  },
-  avatarText: {
-    fontWeight: 'bold',
-    marginLeft: 8,
-    color: '#222',
-  },
-  postImage: {
-    alignSelf: 'center',
-    height: 400,
-    width: 415,
-  },
-  caption: {
-    padding: 10,
-  },
-  captionUsername: {
-    fontWeight: 'bold',
-    marginRight: 10,
-  },
-  icon: {
-    width: 30,
-    height: 30,
-  },
-  likesText: {
-    fontWeight: 'bold',
-    paddingLeft: 10,
-  },
-});
+import Avatar from './Avatar';
+import PostImage from './PostImage';
+import Actions from './Actions';
+import Caption from './Caption';
+import Comment from './Comment';
 
 class Post extends Component {
   state={
     likes: 0,
+    showComment: false,
+    comment: '',
   }
 
   handlePress = () => {
@@ -58,52 +19,20 @@ class Post extends Component {
     });
   }
 
+  changeText = (input) => { this.setState({ comment: input }); }
+
+  handleSubmit = () => { this.setState({ showComment: true }); }
+
   render() {
-    const {
-      avatarContainer,
-      avatar,
-      avatarText,
-      postImage,
-      caption,
-      captionUsername,
-      icon,
-      likesText,
-    } = styles;
-    const { item } = this.props;
-    const { image, content, login } = item;
-    const { username } = login;
     const { likes } = this.state;
 
     return (
       <>
-        {/* Avatar */}
-        <View style={avatarContainer}>
-          <Image
-            style={avatar}
-            resizeMode="cover"
-            source={{ uri: image }}
-          />
-          <Text style={avatarText}>{username}</Text>
-        </View>
-        {/* Post image */}
-        <Image
-          style={postImage}
-          resizeMode="cover"
-          source={{ uri: image }}
-        />
-        {/* Like icon */}
-        <TouchableOpacity style={{ padding: 10 }} onPress={this.handlePress}>
-          <Image style={icon} source={require('../assets/pawprint.png')} />
-        </TouchableOpacity>
-        {/* Likes */}
-        <Text style={likesText}>{`${likes} likes`}</Text>
-        {/* Caption */}
-        <Text style={caption}>
-          <Text style={captionUsername}>
-            {username}
-          </Text>
-          {` ${content}`}
-        </Text>
+        <Avatar {...this.props} />
+        <PostImage {...this.props} />
+        <Actions likes={likes} handlePress={this.handlePress} />
+        <Caption {...this.props} />
+        <Comment changeText={this.changeText} handleSubmit={this.handleSubmit} {...this.state} />
       </>
     );
   }
