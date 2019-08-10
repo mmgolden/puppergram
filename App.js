@@ -7,6 +7,7 @@ import {
   FlatList,
   Image,
   Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import * as Font from 'expo-font';
 import Post from './components/Post';
@@ -159,19 +160,21 @@ export default class App extends Component {
 
     // Render posts
     return (
-      <View style={container}>
-        <View style={header}>
-          <Text style={headerText}>Puppergram</Text>
-        </View>
-        <FlatList
-          data={data}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-        />
+      <>
+        <KeyboardAvoidingView style={container} behavior="padding" enabled>
+          <View style={header}>
+            <Text style={headerText}>Puppergram</Text>
+          </View>
+          <FlatList
+            data={data}
+            renderItem={this.renderItem}
+            keyExtractor={this.keyExtractor}
+          />
+        </KeyboardAvoidingView>
         <View style={navigation}>
           <Image style={icon} source={require('./assets/house.png')} />
         </View>
-      </View>
+      </>
     );
   }
 }

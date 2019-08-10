@@ -4,6 +4,7 @@ import { Text, TextInput, StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   commentText: {
     marginLeft: 10,
+    marginBottom: 10,
   },
   username: {
     fontWeight: 'bold',
@@ -16,6 +17,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     padding: 8,
     borderRadius: 20,
+    marginBottom: 10,
   },
 });
 

@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import {
-  View, Text, Image, Button, StyleSheet,
+  View,
+  Text,
+  Image,
+  Button,
+  StyleSheet,
+  TextInput,
+  ImageBackground,
 } from 'react-native';
 
 // Stateful
@@ -159,4 +165,37 @@ export const Caption = ({
     </Text>
     <Text>{content}</Text>
   </Text>
+);
+
+export const Comment = ({
+  comment,
+  changeText,
+}) => (
+  <View>
+    <Text>{comment}</Text>
+    <TextInput
+      placeholder="Add a comment..."
+      onChangeText={changeText}
+      value={comment}
+    />
+  </View>
+);
+
+export const Icon = () => (
+  <Image
+    style={{
+      width: 30,
+      height: 30,
+    }}
+    source={require('../assets/pawprint.png')}
+  />
+);
+
+export const Background = () => (
+  <ImageBackground
+    style={{ width: '100%', height: '100%' }}
+    source={require('../assets/background.jpg')}
+  >
+    <Text>This goes on top</Text>
+  </ImageBackground>
 );
