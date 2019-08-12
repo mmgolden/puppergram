@@ -69,47 +69,25 @@ export default class App extends Component {
     // Number of results we want back from the API
     const numberOfResults = '5';
 
-    // Dog API URL
-    const dogURL = `https://dog.ceo/api/breeds/image/random/${numberOfResults}`;
+    // Fetch requests to APIs
+    const dogAPICall = fetch(`https://dog.ceo/api/breeds/image/random/${numberOfResults}`);
+    const randomUserAPICall = fetch(`https://randomuser.me/api/?format=json&nat=us&inc=login&results=${numberOfResults}`);
+    const quoteAPICall = fetch(`https://api.quotable.io/quotes?limit=${numberOfResults}`);
 
-    // Random user API URL
-    const randomURL = `https://randomuser.me/api/?format=json&nat=us&inc=login&results=${numberOfResults}`;
-
-    // Random quote API URL
-    const quoteURL = `https://api.quotable.io/quotes?limit=${numberOfResults}`;
-
-    // Get the images from the API
-    fetch(dogURL)
-      .then(res => res.json())
-      .then(({ message }) => {
-        const images = message.map(msg => ({
-          image: msg,
-        }));
+    // Make API requests
+    Promise.all([dogAPICall, randomUserAPICall, quoteAPICall])
+      .then(responses => Promise.all(responses.map(response => response.json())))
+      .then((resJSON) => {
+        const { message } = resJSON[0];
+        const { results: users } = resJSON[1];
+        const { results: quotes } = resJSON[2];
         this.setState({
           loading: false,
-          images,
-        });
-      })
-      .catch(error => console.error(error));
-
-    // Get the random usernames from the API
-    fetch(randomURL)
-      .then(res => res.json())
-      .then(({ results }) => {
-        this.setState({
-          loading: false,
-          users: results,
-        });
-      })
-      .catch(error => console.error(error));
-
-    // Get random quotes from API
-    fetch(quoteURL)
-      .then(res => res.json())
-      .then(({ results }) => {
-        this.setState({
-          loading: false,
-          quotes: results,
+          images: message.map(msg => ({
+            image: msg,
+          })),
+          users,
+          quotes,
         });
       })
       .catch(error => console.error(error));

@@ -7,6 +7,9 @@ import {
   StyleSheet,
   TextInput,
   ImageBackground,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
 } from 'react-native';
 
 // Stateful
@@ -198,4 +201,60 @@ export const Background = () => (
   >
     <Text>This goes on top</Text>
   </ImageBackground>
+);
+
+export const PrimaryButton = ({
+  handlePress,
+}) => (
+  <Button
+    onPress={handlePress}
+    title="Learn more"
+    color="#1044b5"
+    accessibilityLabel="Learn more"
+  />
+);
+
+export const Action = ({
+  handlePress,
+}) => (
+  <TouchableOpacity onPress={handlePress}>
+    <Image
+      style={{
+        height: 30,
+        width: 30,
+      }}
+      source={require('../assets/pawprint.png')}
+    />
+  </TouchableOpacity>
+);
+
+export const ScrollablePage = ({
+  image,
+}) => (
+  <ScrollView>
+    <Text>This is a ScrollView</Text>
+    <Image
+      style={{ height: 30, width: 30 }}
+      source={{ uri: image }}
+    />
+    <Text>Keep on scrolling!</Text>
+    <Image
+      style={{ height: 30, width: 30 }}
+      source={{ uri: image }}
+    />
+  </ScrollView>
+);
+
+export const LazyList = () => (
+  <FlatList
+    data={[
+      { id: 'a123', name: 'Jeff' },
+      { id: 'b456', name: 'Sarah' },
+      { id: 'c789', name: 'Carlos' },
+    ]}
+    renderItem={({ item }) => (
+      <Text>{item.name}</Text>
+    )}
+    keyExtractor={item => item.id}
+  />
 );
