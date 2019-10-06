@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import {
   View,
   Text,
@@ -105,6 +105,20 @@ export class Counter extends Component {
     );
   }
 }
+
+export const HookExample = () => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <>
+      <Text>{count}</Text>
+      <Button
+        title="Click me!"
+        onPress={() => setCount(count + 1)}
+      />
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   box: {
