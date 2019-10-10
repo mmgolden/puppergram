@@ -21,7 +21,7 @@ const Actions = ({ likes, handlePress }) => {
       <TouchableOpacity style={{ padding: 10 }} onPress={handlePress}>
         <Image style={icon} source={require('../assets/pawprint.png')} />
       </TouchableOpacity>
-      <Text style={likesText}>{`${likes} likes`}</Text>
+      <Text style={likesText}>{`${likes} like${likes === 1 ? '' : 's'}`}</Text>
     </>
   );
 };
